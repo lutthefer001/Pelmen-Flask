@@ -170,15 +170,33 @@
     </div>
 
 </div>
-
 <script>
-    function order(product) {
-        let userId = prompt("PUBG ID-ingizni kiriting:");
-        if(userId) {
-            alert(product + " uchun buyurtma qabul qilindi! ID: " + userId + ". Tez orada bog'lanamiz.");
-        }
+    function sendToTelegram() {
+        const id = document.getElementById('pubgId').value;
+        if (!id) { alert("ID kiriting!"); return; }
+
+        fetch('/order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                product: currentProduct,
+                price: currentPrice,
+                pubg_id: id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success") {
+                alert("Buyurtma qabul qilindi!");
+                closeModal();
+            } else {
+                alert("Xatolik: " + data.msg);
+            }
+        });
     }
+</script>
 </script>
 
 </body>
 </html>
+
